@@ -35,13 +35,19 @@ namespace TicTacToe.UnitTests
         [Test]
         public void PlayerWithAllSpacesInTopRowIsWinner()
         {
-            const char expected = 'X';
-            for (var rowIndex = 0; rowIndex < 3; rowIndex++)
+            char[] expected = new char[2];
+            expected[0] = 'X'; expected[1] = 'O';
+            char actual;
+
+            for (var testnumber = 0; testnumber < 2; testnumber++)
             {
-                _gameBoard[0, rowIndex] = expected;
+                for (var rowIndex = 0; rowIndex < 3; rowIndex++)
+                {
+                    _gameBoard[0, rowIndex] = expected[testnumber];
+                }
+                actual = _gameWinnerService.Validate(_gameBoard);
+                Assert.AreEqual(expected[testnumber].ToString(), actual.ToString());
             }
-            var actual = _gameWinnerService.Validate(_gameBoard);
-            Assert.AreEqual(expected.ToString(), actual.ToString());
         }
         [Test]
         public void PlayerWithAllSpacesInSecondColumnIsWinner()
