@@ -12,6 +12,7 @@ namespace TicTacToe.UnitTests
     {
         private IGameWinnerService _gameWinnerService;
         private char[,] _gameBoard;
+        EasyAIService EasyAI = new EasyAIService();
 
         [SetUp]
         public void SetupUnitTests()
@@ -35,7 +36,7 @@ namespace TicTacToe.UnitTests
         [Test]
         public void EasyAIReturnsAMove()
         {
-            int AIMove = EasyAI.MoveSet();
+            int AIMove = EasyAI.MoveSet(_gameBoard);
             bool AIMoveIsWithinArrayBorders = false;
 
             Assert.AreNotEqual(AIMove, null);
@@ -51,17 +52,18 @@ namespace TicTacToe.UnitTests
             {
                 _gameBoard[0, rowIndex] = 'X';
                 _gameBoard[1, rowIndex] = 'X';
-                Assert.AreEqual(3 + (rowIndex * 3), EasyAI.MoveSet());
+                Assert.AreEqual(3 + (rowIndex * 3), EasyAI.MoveSet(_gameBoard));
                 ClearBoard();
 
                 _gameBoard[0, rowIndex] = 'X';
                 _gameBoard[2, rowIndex] = 'X';
-                Assert.AreEqual(2 + (rowIndex * 3), EasyAI.MoveSet());
+                Assert.AreEqual(2 + (rowIndex * 3), EasyAI.MoveSet(_gameBoard));
                 ClearBoard();
 
                 _gameBoard[1, rowIndex] = 'X';
                 _gameBoard[2, rowIndex] = 'X';
-                Assert.AreEqual(1 + (rowIndex * 3), EasyAI.MoveSet());
+                Assert.AreEqual(1 + (rowIndex * 3), EasyAI.MoveSet(_gameBoard));
+                ClearBoard();
             }
         }
 
@@ -72,67 +74,70 @@ namespace TicTacToe.UnitTests
             {
                 _gameBoard[columIndex, 0] = 'X';
                 _gameBoard[columIndex, 1] = 'X';
-                Assert.AreEqual(7 + columIndex, EasyAI.MoveSet());
+                Assert.AreEqual(7 + columIndex, EasyAI.MoveSet(_gameBoard));
                 ClearBoard();
 
                 _gameBoard[columIndex, 0] = 'X';
                 _gameBoard[columIndex, 2] = 'X';
-                Assert.AreEqual(4 + columIndex, EasyAI.MoveSet());
+                Assert.AreEqual(4 + columIndex, EasyAI.MoveSet(_gameBoard));
                 ClearBoard();
 
                 _gameBoard[columIndex, 1] = 'X';
                 _gameBoard[columIndex, 2] = 'X';
-                Assert.AreEqual(1 + columIndex, EasyAI.MoveSet());
+                Assert.AreEqual(1 + columIndex, EasyAI.MoveSet(_gameBoard));
+                ClearBoard();
             }
-        }
-
-        [Test]
-        public void BlockingDiagonalDownToLeft()
-        {
-            _gameBoard[0, 0] = 'X';
-            _gameBoard[1, 1] = 'X';
-            Assert.AreEqual(9, EasyAI.MoveSet());
-            ClearBoard();
-
-            _gameBoard[1, 1] = 'X';
-            _gameBoard[2, 2] = 'X';
-            Assert.AreEqual(1, EasyAI.MoveSet());
-            ClearBoard();
-
-            _gameBoard[0, 0] = 'X';
-            _gameBoard[2, 2] = 'X';
-            Assert.AreEqual(5, EasyAI.MoveSet());
         }
 
         [Test]
         public void BlockingDiagonalDownToRight()
         {
+            _gameBoard[0, 0] = 'X';
+            _gameBoard[1, 1] = 'X';
+            Assert.AreEqual(9, EasyAI.MoveSet(_gameBoard));
+            ClearBoard();
+
+            _gameBoard[1, 1] = 'X';
+            _gameBoard[2, 2] = 'X';
+            Assert.AreEqual(1, EasyAI.MoveSet(_gameBoard));
+            ClearBoard();
+
+            _gameBoard[0, 0] = 'X';
+            _gameBoard[2, 2] = 'X';
+            Assert.AreEqual(5, EasyAI.MoveSet(_gameBoard));
+            ClearBoard();
+        }
+
+        [Test]
+        public void BlockingDiagonalDownToLeft()
+        {
             _gameBoard[0, 2] = 'X';
             _gameBoard[1, 1] = 'X';
-            Assert.AreEqual(3, EasyAI.MoveSet());
+            Assert.AreEqual(3, EasyAI.MoveSet(_gameBoard));
             ClearBoard();
 
             _gameBoard[0, 2] = 'X';
             _gameBoard[2, 0] = 'X';
-            Assert.AreEqual(5, EasyAI.MoveSet());
+            Assert.AreEqual(5, EasyAI.MoveSet(_gameBoard));
             ClearBoard();
 
             _gameBoard[1, 1] = 'X';
             _gameBoard[2, 0] = 'X';
-            Assert.AreEqual(7, EasyAI.MoveSet());
+            Assert.AreEqual(7, EasyAI.MoveSet(_gameBoard));
+            ClearBoard();
         }
 
         [Test]
         public void TestIfAIMoveIsValid()
         {
             TestForValidService valid = new TestForValidService();
-            Assert.IsTrue(valid.TestIfInputIsValid(EasyAI.MoveSet(), _gameBoard));
+            Assert.IsTrue(valid.TestIfInputIsValid(EasyAI.MoveSet(_gameBoard), _gameBoard));
 
             for (int columIndex = 0; columIndex <= 2; columIndex++)
                 for (int rowIndex = 0; rowIndex <= 2; rowIndex++)
                     _gameBoard[columIndex, rowIndex] = 'X';
 
-            Assert.IsFalse(valid.TestIfInputIsValid(EasyAI.MoveSet(), _gameBoard));
+            Assert.IsFalse(valid.TestIfInputIsValid(EasyAI.MoveSet(_gameBoard), _gameBoard));
         }
     }
 }
